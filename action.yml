@@ -1,0 +1,36 @@
+name: Install Anypoint CLI
+description: Installs the anypoint cli
+inputs:
+  client_id:
+    description: 'The client id to use'
+    requried: true
+  client_secret:
+    description: 'The client secret'
+    required: true
+  organization:
+    description: 'Which organization are we using this for?'
+    requried: true
+  environment:
+    description: 'Which environment are we authorizing to?'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Display the version of anypoint cli
+      shell: bash
+      run: |
+          npm install -g anypoint-cli-v4
+          anypoint-cli-v4 conf organization "${{ inputs.organization }}"
+          anypoint-cli-v4 conf client_id "${{ inputs.client_id }}"
+          anypoint-cli-v4 conf client_secret "${{ inputs.client_secret }}"
+          anypoint-cli-v4 conf environment Test
+          anypoint-cli-v4 plugins:install anypoint-cli-account-plugin
+          anypoint-cli-v4 plugins:install anypoint-cli-cloudhub-plugin
+          anypoint-cli-v4 plugins:install anypoint-cli-designcenter-plugin
+          anypoint-cli-v4 plugins:install anypoint-cli-exchange-plugin
+          anypoint-cli-v4 plugins:install anypoint-cli-governance-plugin
+          anypoint-cli-v4 plugins:install anypoint-cli-runtime-mgr-plugin
+          anypoint-cli-v4 plugins
+          anypoint-cli-v4 account:environment:list --host eu1.anypoint.mulesoft.com
+          anypoint-cli-v4 version
